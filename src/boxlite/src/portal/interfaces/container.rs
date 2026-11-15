@@ -176,6 +176,7 @@ impl ContainerInterface {
                 owner_uid: m.owner_uid,
                 owner_gid: m.owner_gid,
                 subpath: m.subpath.unwrap_or_default(),
+                volume_sub_path: m.volume_sub_path.unwrap_or_default(),
             })
             .collect();
 
@@ -226,6 +227,10 @@ impl ContainerInterface {
                     Ok(ContainerInitErrorKind::Unsupported) => {
                         Err(BoxliteError::Unsupported(reason))
                     }
+                    Ok(ContainerInitErrorKind::InvalidArgument) => {
+                        Err(BoxliteError::InvalidArgument(reason))
+                    }
+                    Ok(ContainerInitErrorKind::NotFound) => Err(BoxliteError::NotFound(reason)),
                     _ => Err(BoxliteError::Internal(reason)),
                 }
             }
